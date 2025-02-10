@@ -24,7 +24,7 @@ response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=conversation
 )
-
+print("DISPLAYING RESPONSE with different ROLES")
 # Display the conversation with roles and content
 print("\n--- Conversation History ---")
 for message in conversation:
@@ -34,6 +34,31 @@ for message in conversation:
 # Display the AI's latest response
 print("\n--- Assistant's Response ---")
 print(response.choices[0].message.content)
+
+# Function to make API call with variable temperature
+def get_response_with_temperature(temp):
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=conversation,
+        temperature=temp
+    )
+    return response.choices[0].message.content
+
+print("DISPLAYING RESPONSES WITH DIFFERENT TEMPERATURES")
+# Display the conversation with roles and content
+print("\n--- Conversation History ---")
+for message in conversation:
+    print(f"\nRole: {message['role'].capitalize()}")
+    print(f"Content: {message['content']}")
+
+# Test with different temperature settings
+temperatures = [0.2, 0.7, 1.2]
+
+for temp in temperatures:
+    print(f"\n--- Assistant's Response with Temperature {temp} ---")
+    response_content = get_response_with_temperature(temp)
+    print(response_content)
+
 
 
 # Output:
