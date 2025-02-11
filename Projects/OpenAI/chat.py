@@ -52,14 +52,20 @@ for message in conversation:
     print(f"Content: {message['content']}")
 
 # Test with different temperature settings
-temperatures = [0.2, 0.7, 1.2]
-
+temperatures = [0.2, 0.7, 1.2, 1.9]
 for temp in temperatures:
     print(f"\n--- Assistant's Response with Temperature {temp} ---")
-    response_content = get_response_with_temperature(temp)
-    print(response_content)
-
-
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": "Write a short story about how a monkey ended up colonizing the moon"}
+        ],
+        max_tokens=400,
+        temperature=temp
+    )
+    response_content = response.choices[0].message.content
+    print(f"For the temperature of {temp}, the response is:\n{response_content}")
+    print("--------------------")
 
 # Output:
 # --- Conversation History ---
