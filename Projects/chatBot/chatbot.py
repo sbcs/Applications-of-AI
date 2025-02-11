@@ -1,21 +1,34 @@
 from flask import Flask, request, jsonify, render_template
-import openai
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # Import the dotenv module to load env variables
+from openai import OpenAI
 from transformers import pipeline
 
 # Load environment variables from the .env file
 load_dotenv()
-
-# Get the API key from the environment
 api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("No API key provided. Please set the OPENAI_API_KEY environment variable in your .env file.")
 
-# Initialize OpenAI client
-client = openai.OpenAI(api_key=api_key)
-
+# Initialize the OpenAI client with the API key from the environment
+client = OpenAI(api_key=api_key)
 sentiment_analyzer = pipeline("sentiment-analysis")
-
 app = Flask(__name__)
+
+EDUCATION_PROMPT = """You are an AI teaching assistant specializing in explaining:
+- AI fundamentals and applications
+- Hugging Face's open-source models
+- OpenAI's commercial APIs
+- Practical AI implementations
+
+Provide clear, concise and short example-driven explanations. For comparisons:
+- Hugging Face: Open-source, self-hosted models
+- OpenAI: Commercial API services
+- Applications: Use cases in healthcare, finance, education, etc."""
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/ask", methods=["POST"])
 def ask():
@@ -30,14 +43,17 @@ def ask():
             return jsonify({"error": "Please enter a question"}), 400
 
         if topic == "AI Overview":
+            if len(user_input.split()) < 2:
+                system_message = EDUCATION_PROMPT + " Focus on generic real-world applications."
+            else:
+                system_message = f"{EDUCATION_PROMPT} Focus on real-world applications in {user_input} industry."
+
             response = client.chat.completions.create(
-                model="gpt-4-turbo",  # Updated model
-                messages=[{
-                    "role": "system", 
-                    "content": f"{EDUCATION_PROMPT} Focus on real-world applications in {user_input} industry."
-                }],
+                model="gpt-4-turbo",
+                messages=[{"role": "system", "content": system_message}],
                 max_tokens=300
             )
+
             result = response.choices[0].message.content
 
         elif topic == "Hugging Face Applications":
@@ -54,7 +70,7 @@ def ask():
                 model="gpt-4-turbo",
                 messages=[{
                     "role": "system",
-                    "conte¨nt": f"Explain OpenAI's role in {user_input} with technical details"
+                    "content": f"Explain OpenAI's role in {user_input} with technical details"
                 }],
                 max_tokens=300
             )
