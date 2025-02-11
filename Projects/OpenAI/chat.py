@@ -53,14 +53,20 @@ for message in conversation:
 
 # Test with different temperature settings
 temperatures = [0.2, 0.7, 1.2, 1.9]
+PROMPT2 = """Compose a short story that blends science fiction, fantasy, and surreal humor.
+Your narrative must include the words "banana", "astronaut", "moon", and "monkey" at least once.
+Craft an unpredictable tale filled with vivid imagery and surprising twists.
+Begin your story with the sentence: I never expected to see a monkey on the moon.
+"""
+
 for temp in temperatures:
     print(f"\n--- Assistant's Response with Temperature {temp} ---")
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": "Write a short story about how a monkey ended up colonizing the moon"}
+            {"role": "user", "content": PROMPT2}
         ],
-        max_tokens=400,
+        max_tokens=300,
         temperature=temp
     )
     response_content = response.choices[0].message.content
