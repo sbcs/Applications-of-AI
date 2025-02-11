@@ -2,7 +2,7 @@ from transformers import pipeline
 
 def main():
     messages = [
-        {"role": "user", "content": "Who are you?"}
+        {"role": "user", "content": "Who are you? Why should I use AI?"}
     ]
     
     # Extract the user's input as a string.
@@ -24,4 +24,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
