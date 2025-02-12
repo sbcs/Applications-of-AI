@@ -11,22 +11,26 @@ The first step will be to make a **virtual environment** so you can isolate the 
 ```bash
 python3 -m venv venv
 ```
-
-
 #### Step 2
 Now we will turn on the virtual environment
 ```bash
 source venv/bin/activate
 ```
 
-#### Step 4
+#### Step 3
 Download dependencies. Using the requirements.txt file that was given to us, we run the following command:
 ```bash
 pip install -r requirements.txt
 ```
 
-#### Step 5
+#### Step 4
 Now, it's time to actually run the project!
 ```python3
 python3 demo.py
+```
+----------
+#### Step 5
+Once you're done with the project you need to **DEACTIVATE** the virtual environment
+```python3
+deactivate
 ```
